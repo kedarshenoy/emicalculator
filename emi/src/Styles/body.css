@@ -1,0 +1,20 @@
+.bodydiv{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    /* background-color: gray; */
+}
+.mainhead{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 30px;
+}
+.emicalc{
+    border: 2px solid black;
+    width: 500px;
+}

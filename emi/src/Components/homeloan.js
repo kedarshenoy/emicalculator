@@ -1,0 +1,129 @@
+import { useState } from 'react';
+import React from 'react';
+import '../Styles/loan.css';
+import { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto'
+// import Modal from 'react-modal';
+import Pie from './pie'
+
+import Graph from './graph';
+
+
+
+const Homeloan=()=>{
+
+    // const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [loan ,setloan]=useState({p:10000,r:5,t:12});
+    let totali=0;
+    // const [totalIntrest,setintrest] =useState(0);
+
+    const loanEmi=()=>{
+        const monthlyInterestRate = (loan.r / 12) / 100;
+
+        // Convert loan term to months
+        const loanTermInMonths = loan.t ;
+      
+        // Calculate EMI using the formula
+        const emi = (loan.p * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermInMonths)) /
+                    (Math.pow(1 + monthlyInterestRate, loanTermInMonths) - 1);
+        const TotalInterestPayable=Math.ceil((emi * loanTermInMonths) - loan.p );
+        // setintrest(TotalInterestPayable);
+        totali=TotalInterestPayable;
+       const total=Math.floor(parseInt(loan.p)+TotalInterestPayable);
+    ;
+    // console.log(TotalInterestPayable)
+        return <>
+                <h3 >Loan EMI :- {Math.ceil(emi)}</h3>
+                <h4>Total Interest Payable:- {TotalInterestPayable} </h4>
+                <h4>
+                Total Payment=(Principal + Interest) :- {total}
+                </h4>
+                
+                
+        </>; 
+    }
+
+    const Pie=()=>{
+
+        let TotalIntrest =totali;
+        let PrincipleAmount =loan.p;
+        
+    
+        const chartRef = useRef(null);
+        const chartInstance = useRef(null);
+        useEffect(()=>{
+            if(chartInstance.current){
+                chartInstance.current.destroy()
+    
+            }
+            const myChartRef =chartRef.current.getContext('2d');
+            chartInstance.current =new Chart(myChartRef,{
+                type:'pie',
+                data:{
+                    labels:["Total Intrest ",'Principle Amount'],
+                    datasets :[
+                        {
+                            data:[TotalIntrest,PrincipleAmount],
+                            backgroundColor:[
+                                'rgb(255,99,132)',
+                                'rgb(54,162,235)',
+                                
+                            ],
+    
+                        }
+                    ]
+                }
+            })
+            return ()=>{
+                if(chartInstance.current){
+                    chartInstance.current.destroy()
+                }
+            }
+        },[])
+    
+    
+        return(
+            <div id='piechart'>
+                <canvas ref={chartRef} style={{width:'100px',height:'100px'}}/>
+            </div>
+    
+        )
+            }
+    
+        
+    
+
+    return (
+        <> 
+        <div className="params">
+            <label>Home Loan Amount &nbsp;&nbsp;</label>
+            <span className='inps'><input type='number' value={loan.p} onChange={e=>{setloan({...loan, p:e.target.value }); }}></input> ₹</span>
+            <div className='my-2'> <input className='slidbar' type='range' min={0} max={2000000} value={loan.p} onChange={e=>{setloan({...loan, p:e.target.value })}}></input></div>
+        </div>
+
+        <div className="params">
+            <label>Interest Rate &nbsp;&nbsp; </label>
+            <span className='inps'><input type='number' value={loan.r} onChange={e=>{setloan({...loan, r:e.target.value }); }}></input> %</span>
+            <div className='my-2'> <input type='range' className='slidbar' min={0} max={100} step="0.1" value={loan.r} onChange={e=>{setloan({...loan, r:e.target.value })}}></input></div>
+        </div>
+
+        <div className="params ">
+            <label>Loan Tenure &nbsp;&nbsp;</label>
+            <span className='inps'><input type='number' value={loan.t} onChange={e=>{setloan({...loan, t:e.target.value })}}></input> Months</span>
+            <div className='my-2'> <input className='slidbar' type='range' min={0} max={84} value={loan.t} onChange={e=>{setloan({...loan, t:e.target.value }); }}></input></div>
+        </div>
+        <div >
+            <span className='chartsec'>
+            all other
+            {loanEmi()}
+                
+            </span>
+           <Pie/>
+           <Graph p={loan.p} t={loan.t/12} r={loan.r}/>
+        </div>
+        
+        </>
+    )
+}
+
+export default Homeloan;

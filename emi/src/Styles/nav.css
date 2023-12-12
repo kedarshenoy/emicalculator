@@ -1,0 +1,14 @@
+.navdiv{
+    background-color: rgb(38, 164, 227);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+
+}
+
+.navlogo{
+    color: antiquewhite;
+    font-size: 25px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+}
